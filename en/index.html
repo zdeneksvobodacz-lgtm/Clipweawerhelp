@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clip Weaver Guide</title>
+<meta name="description" content="Guide to the Clip Weaver panel for Adobe Premiere Pro: what Cutter and Weaver do and what every button does.">
+<link rel="alternate" hreflang="cs" href="../index.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<style>
+/* základní reset (na claude.ai ho doplňoval publikační rámec) */
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* přepínač jazyka */
+.lang-switch { display: flex; gap: 6px; font-family: var(--f-mono); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; }
+.lang-switch a { text-decoration: none; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; background: var(--surface); }
+.lang-switch a:hover { color: var(--ink); border-color: var(--accent); }
+.lang-switch a[aria-current="page"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.hero-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+</style>
+<style>
+/* Layout: narrow sticky contents on the left + reading column; each feature = panel screenshot beside a list of its controls */
+:root {
+  --bg: #eef1f4;
+  --surface: #ffffff;
+  --ink: #131a20;
+  --muted: #56636f;
+  --line: #d9e0e7;
+  --accent: #0a86c9;
+  --accent-soft: #e1f2fb;
+  --warn: #9a6a12;
+  --warn-soft: #fbf1dc;
+  --panel: #1d1f21;       /* screenshot backdrop, same in both themes */
+  --panel-line: #2c3034;
+  --logo-mark: #00aeef;  /* modrá značka z loga, v obou režimech */
+  --v1: #439ddc; --v2: #5aa673; --v3: #b89245; --v4: #a374c4;
+  --f-display: "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;  /* stejné písmo jako panel Clip Weaver */
+  --f-body: "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --f-mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101316; --surface: #171b1f; --ink: #e7ecf0; --muted: #94a1ad; --line: #283038;
+    --accent: #1bb4ff; --accent-soft: #10283a; --warn: #e2b155; --warn-soft: #2a2214;
+    --panel: #1d1f21; --panel-line: #33383d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101316; --surface: #171b1f; --ink: #e7ecf0; --muted: #94a1ad; --line: #283038;
+  --accent: #1bb4ff; --accent-soft: #10283a; --warn: #e2b155; --warn-soft: #2a2214;
+  --panel: #1d1f21; --panel-line: #33383d;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -0.02em; }
+h1.logo { line-height: 0; }
+h1.logo svg { display: block; width: clamp(200px, 32vw, 300px); max-width: 100%; height: auto; }
+.lg-t { fill: var(--ink); }
+.lg-m { fill: var(--logo-mark); }
+h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(24px, 5vw, 64px);
+  align-items: center;
+  padding-block: clamp(32px, 6vw, 72px) clamp(24px, 4vw, 48px);
+}
+.eyebrow {
+  font-family: var(--f-mono); font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.hero-text { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.lead { font-size: 1.2rem; color: var(--muted); max-width: 34em; }
+.lead strong { color: var(--ink); }
+.halves { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.half {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; display: flex; flex-direction: column; gap: 4px;
+}
+.half b { font-family: var(--f-display); font-size: 1.1rem; }
+.half span { color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
+.hero-shot { justify-self: center; width: 100%; max-width: 420px; margin: 0; }
+.hero-shot img { display: block; width: 100%; height: auto; }
+
+/* ---------- Screenshot frame ---------- */
+.shot {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 18px 40px -24px rgba(10, 30, 50, .45);
+}
+.shot img { display: block; width: 100%; height: auto; }
+.shot figcaption {
+  font-family: var(--f-mono); font-size: 0.74rem; color: #9aa4ad; letter-spacing: 0.02em;
+  padding: 8px 12px; border-top: 1px solid var(--panel-line);
+}
+
+/* ---------- Main layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  padding-block: 16px 80px;
+}
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; }
+.toc p { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; border-left: 2px solid var(--line); }
+.toc a { display: block; padding: 5px 12px; margin-left: -2px; border-left: 2px solid transparent; color: var(--muted); text-decoration: none; font-size: 0.95rem; line-height: 1.35; }
+.toc a:hover { color: var(--ink); border-left-color: var(--accent); }
+.toc .sub a { padding-left: 24px; font-size: 0.88rem; }
+
+main { min-width: 0; display: flex; flex-direction: column; gap: 72px; }
+section { display: flex; flex-direction: column; gap: 22px; scroll-margin-top: 24px; }
+.section-head { display: flex; flex-direction: column; gap: 10px; max-width: 42em; }
+.section-head p { color: var(--muted); font-size: 1.08rem; }
+.part-tag {
+  align-self: flex-start; font-family: var(--f-mono); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+}
+
+/* Feature: screenshot + controls */
+.feature {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(20px, 3vw, 36px);
+  align-items: start;
+  scroll-margin-top: 24px;
+}
+.feature > div { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.feature .shot { max-width: 520px; }
+.feature-text > p { max-width: 36em; }
+
+.controls { margin: 0; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.controls > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.controls dt { min-width: 0; }
+.controls dd { margin: 0; min-width: 0; color: var(--ink); line-height: 1.5; }
+.controls dd .muted { color: var(--muted); }
+
+/* Button names styled as they look in the panel */
+.ctl {
+  display: inline-block; font-family: var(--f-body); font-weight: 700; font-size: 0.86rem;
+  line-height: 1.2; padding: 4px 9px; border-radius: 6px;
+  background: var(--panel); color: #f1f3f5; border: 1px solid var(--panel-line); white-space: nowrap;
+}
+.ctl.cut { background: #ffffff; color: #0a86c9; border-color: #d6dde3; }
+.ctl.run { background: #1bb4ff; color: #ffffff; border-color: #1bb4ff; }
+.ctl.ghost { color: #8d969e; }
+.tc { font-family: var(--f-mono); font-weight: 700; font-size: 0.9em; letter-spacing: 0.02em; white-space: nowrap; }
+
+/* Side-by-side variants */
+.variants { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+.variant { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.variant h3 { font-size: 1.05rem; }
+.variant p { color: var(--muted); font-size: 0.98rem; }
+
+/* Notes */
+.note {
+  border-radius: 10px; padding: 14px 18px; background: var(--accent-soft);
+  display: flex; flex-direction: column; gap: 4px; max-width: 46em;
+}
+.note b { font-family: var(--f-display); }
+.note.warn { background: var(--warn-soft); }
+.note.warn b { color: var(--warn); }
+
+/* Quick start steps */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; counter-reset: step; }
+.steps li { counter-increment: step; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.steps li::before { content: counter(step); font-family: var(--f-mono); font-weight: 700; font-size: 0.8rem; color: var(--accent); }
+.steps b { font-family: var(--f-display); font-size: 1.05rem; }
+.steps span { color: var(--muted); font-size: 0.97rem; line-height: 1.5; }
+
+/* Mini timeline: before / after interleaving */
+.tl-box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
+.tl { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tl-title { font-family: var(--f-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.tl-row { display: grid; grid-template-columns: 26px repeat(9, minmax(0, 1fr)); gap: 3px; align-items: center; }
+.tl-row > span:first-child { font-family: var(--f-mono); font-size: 0.72rem; color: var(--muted); }
+.tl-row i { height: 16px; border-radius: 3px; background: transparent; }
+.tl-row i.a { background: var(--v1); } .tl-row i.b { background: var(--v2); } .tl-row i.c { background: var(--v3); }
+.tl-caption { grid-column: 1 / -1; color: var(--muted); font-size: 0.95rem; }
+
+/* Messages table */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 0.96rem; }
+th, td { text-align: left; vertical-align: top; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+th { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-family: var(--f-mono); font-size: 0.84rem; width: 46%; }
+
+/* Video pod hlavní částí */
+.video { display: flex; flex-direction: column; gap: 12px; padding-block: 8px 40px; }
+.video-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.video-head h2 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); }
+.video-head a { font-size: 0.95rem; }
+.video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 700px) { .video-grid { grid-template-columns: minmax(0, 1fr); } }
+.video-frame { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--panel); border: 1px solid var(--panel-line); box-shadow: 0 18px 40px -24px rgba(10, 30, 50, .45); }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+a.video-frame { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-decoration: none; color: #f1f3f5; background: radial-gradient(120% 90% at 50% 40%, #23272b 0%, var(--panel) 70%); }
+a.video-frame:hover .play { transform: scale(1.06); }
+.play { width: 76px; height: 76px; border-radius: 50%; background: #1bb4ff; display: grid; place-items: center; transition: transform .15s ease; }
+.play svg { width: 30px; height: 30px; margin-left: 4px; fill: #ffffff; }
+.video-frame .vlabel { font-weight: 700; font-size: 1.05rem; }
+.video-frame .vsub { font-family: var(--f-mono); font-size: 0.78rem; color: #9aa4ad; }
+@media (prefers-reduced-motion: reduce) { .play { transition: none; } }
+footer { border-top: 1px solid var(--line); padding-block: 24px 40px; color: var(--muted); font-size: 0.9rem; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero-shot { max-width: 360px; justify-self: start; }
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .toc { position: static; }
+  .toc ol { flex-direction: row; flex-wrap: wrap; border-left: 0; gap: 6px; }
+  .toc .sub { display: none; }
+  .toc a { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; margin: 0; background: var(--surface); }
+  .feature { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .halves { grid-template-columns: 1fr; }
+  .controls > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .tl-box { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+
+<div class="wrap" lang="en">
+
+  <header class="hero">
+    <div class="hero-text">
+      <div class="hero-top">
+      <span class="eyebrow">Adobe Premiere Pro plugin · Ver 1.0</span>
+        <nav class="lang-switch" aria-label="Language"><a href="../index.html" hreflang="cs" lang="cs">CZ</a><a href="index.html" hreflang="en" aria-current="page">EN</a></nav>
+      </div>
+      <h1 class="logo"><svg viewBox="0 0 448.84 135.2" role="img" aria-label="Clip Weaver"><title>Clip Weaver</title><path class="lg-t" d="M197.9,58.57c-2.5,1.25-7.49,2.5-13.88,2.5-14.82,0-25.97-9.36-25.97-26.6s11.15-27.61,27.46-27.61c6.55,0,10.69,1.4,12.48,2.34l-1.64,5.54c-2.57-1.25-6.24-2.18-10.61-2.18-12.32,0-20.51,7.88-20.51,21.69,0,12.87,7.41,21.14,20.2,21.14,4.13,0,8.35-.86,11.08-2.18l1.4,5.38Z"/><path class="lg-t" d="M206.4,7.71h6.79v46.88h22.46v5.69h-29.25V7.71Z"/><path class="lg-t" d="M250,7.71v52.57h-6.79V7.71h6.79Z"/><path class="lg-t" d="M261.86,8.33c3.28-.55,7.57-1.01,13.03-1.01,6.71,0,11.62,1.56,14.74,4.37,2.89,2.5,4.6,6.32,4.6,11s-1.4,8.5-4.06,11.23c-3.59,3.82-9.44,5.77-16.07,5.77-2.03,0-3.9-.08-5.46-.47v21.06h-6.79V8.33ZM268.65,33.68c1.48.39,3.35.55,5.62.55,8.19,0,13.18-3.98,13.18-11.23s-4.92-10.3-12.4-10.3c-2.96,0-5.23.23-6.4.55v20.44Z"/><path class="lg-t" d="M168.88,128.57l-12.48-52.57h12.71l3.98,21.69c1.17,6.24,2.26,13.03,3.12,18.33h.16c.86-5.69,2.11-12.01,3.43-18.49l4.45-21.53h12.64l4.21,22.15c1.17,6.16,2.03,11.78,2.81,17.63h.16c.78-5.85,1.95-12.01,3.04-18.25l4.29-21.53h12.09l-13.57,52.57h-12.87l-4.45-22.62c-1.01-5.3-1.87-10.22-2.5-16.22h-.16c-.94,5.93-1.79,10.92-3.04,16.22l-4.99,22.62h-13.03Z"/><path class="lg-t" d="M260.92,106.34h-19.34v12.48h21.61v9.75h-33.54v-52.57h32.45v9.75h-20.51v10.92h19.34v9.67Z"/><path class="lg-t" d="M283.55,115.07l-3.74,13.49h-12.32l16.07-52.57h15.6l16.3,52.57h-12.79l-4.06-13.49h-15.05ZM296.88,106.18l-3.28-11.15c-.94-3.12-1.87-7.02-2.65-10.14h-.16c-.78,3.12-1.56,7.1-2.42,10.14l-3.12,11.15h11.62Z"/><path class="lg-t" d="M330.27,128.57l-16.85-52.57h13.03l6.4,22.23c1.79,6.24,3.43,12.25,4.68,18.8h.23c1.33-6.32,2.96-12.56,4.76-18.56l6.71-22.46h12.64l-17.71,52.57h-13.88Z"/><path class="lg-t" d="M398.76,106.34h-19.34v12.48h21.61v9.75h-33.54v-52.57h32.45v9.75h-20.51v10.92h19.34v9.67Z"/><path class="lg-t" d="M409.14,76.7c3.82-.62,9.52-1.09,15.83-1.09,7.8,0,13.26,1.17,17,4.13,3.12,2.5,4.84,6.16,4.84,11,0,6.71-4.76,11.31-9.28,12.95v.23c3.67,1.48,5.69,4.99,7.02,9.83,1.64,5.93,3.28,12.79,4.29,14.82h-12.17c-.86-1.48-2.11-5.77-3.67-12.25-1.4-6.55-3.67-8.35-8.5-8.42h-3.59v20.67h-11.78v-51.87ZM420.91,99.32h4.68c5.93,0,9.44-2.96,9.44-7.57,0-4.84-3.28-7.25-8.74-7.33-2.89,0-4.52.23-5.38.39v14.51Z"/><rect class="lg-m" x="66.22" y="67.22" width="33.75" height="61.93" transform="translate(166.18 196.37) rotate(-180)"/><rect class="lg-m" x="0" y="67.22" width="33.75" height="61.93" transform="translate(33.75 196.37) rotate(-180)"/><rect class="lg-m" x="32.89" y="5.99" width="33.75" height="61.93" transform="translate(99.54 73.92) rotate(-180)"/><rect class="lg-m" x="99.96" y="5.99" width="33.75" height="61.93" transform="translate(233.68 73.92) rotate(-180)"/></svg></h1>
+      <p class="lead">One panel, two tools. At the top, <strong>Cutter</strong> slices the selected clips into pieces. At the bottom, <strong>Weaver</strong> interleaves those pieces from several video tracks one after another on the timeline.</p>
+    </div>
+    <figure class="hero-shot">
+      <img src="../img/hero.png" width="1011" height="1408" alt="The full Clip Weaver panel: Time, Parts and Sequence tabs with a timecode field and CUT button at the top; Sequential/Random with a track grid and RUN button at the bottom">
+    </figure>
+  </header>
+  <section class="video" id="video" aria-label="Video">
+    <div class="video-head"><h2>See Clip Weaver in action</h2><a href="https://youtu.be/oRWlmi5z_Bw">Open on YouTube ↗</a></div>
+    <div class="video-grid">
+      <div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/oRWlmi5z_Bw" title="Clip Weaver – video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Contents">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#start">Quick start</a></li>
+        <li><a href="#cutter">Cutter</a></li>
+        <li class="sub"><a href="#time">Time</a></li>
+        <li class="sub"><a href="#parts">Parts</a></li>
+        <li class="sub"><a href="#randomness">Randomness</a></li>
+        <li class="sub"><a href="#sequence">Sequence</a></li>
+        <li class="sub"><a href="#cut-undo">CUT and Undo</a></li>
+        <li><a href="#weaver">Weaver</a></li>
+        <li class="sub"><a href="#sequential">Sequential</a></li>
+        <li class="sub"><a href="#random">Random</a></li>
+        <li class="sub"><a href="#run-undo">RUN and Undo</a></li>
+        <li><a href="#tips">Tips and limits</a></li>
+        <li><a href="#messages">Panel messages</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <!-- ================= QUICK START ================= -->
+      <section id="start">
+        <div class="section-head">
+          <h2>Quick start</h2>
+          <p>The typical workflow is to cut the clips first, then interleave them. Each half also works on its own.</p>
+        </div>
+        <ol class="steps">
+          <li><b>Open a sequence</b><span>The panel finds the active sequence by itself, even if you open it after the panel.</span></li>
+          <li><b>Select clips and hit CUT</b><span>Select clips in the timeline, set the piece length at the top and click <span class="ctl cut">CUT</span>.</span></li>
+          <li><b>Pick an order and hit RUN</b><span>At the bottom choose Sequential or Random, check the grid and click <span class="ctl run">RUN</span>.</span></li>
+          <li><b>Don't like it? Undo</b><span>Each half has its own <span class="ctl">Undo</span> that reverts its last action.</span></li>
+        </ol>
+      </section>
+
+      <!-- ================= CUTTER ================= -->
+      <section id="cutter">
+        <div class="section-head">
+          <span class="part-tag">Top half</span>
+          <h2>Cutter: cutting clips</h2>
+          <p>Cutter works only on the clips <strong>selected in the timeline</strong>. Each clip is cut starting from its own beginning. Three tabs at the top decide how the piece length is worked out.</p>
+        </div>
+
+        <div class="feature" id="time">
+          <div><figure class="shot"><img src="../img/cut-time.png" width="1140" height="560" alt="Time tab with the timecode field set to 00:00:05:00, Randomness switched OFF, and the Undo and CUT buttons" loading="lazy"><figcaption>Time tab</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Time: cut at a fixed interval</h3>
+            <p>Enter the length of one piece as a timecode. The default <span class="tc">00:00:05:00</span> cuts every selected clip every five seconds. The last piece is shorter if the clip doesn't divide evenly.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">Time</span> <span class="ctl ghost">Parts</span> <span class="ctl ghost">Sequence</span></dt><dd>Switches between the three cutting modes. The active tab is highlighted.</dd></div>
+              <div><dt><span class="tc">HH : MM : SS : FF</span></dt><dd>Hours, minutes, seconds and frames. You can type into each field. Clicking a field makes it the active one (its label turns blue). <span class="muted">FF is active when the panel opens.</span></dd></div>
+              <div><dt><span class="ctl">▲</span> <span class="ctl">▼</span></dt><dd>Adds or subtracts 1 in the <em>active</em> field. Hold the button and the value keeps going, gradually speeding up.</dd></div>
+              <div><dt>Mouse wheel, arrow keys</dt><dd>Scroll up or down over a field, or press ↑ ↓ inside it. This changes the field under the pointer directly.</dd></div>
+              <div><dt>Overflow</dt><dd>Values roll over by themselves: typing 30 frames in a 30 fps sequence becomes 1 second. Frames follow the frame rate of the active sequence.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="feature" id="parts">
+          <div><figure class="shot"><img src="../img/cut-parts.png" width="1140" height="560" alt="Parts tab with the part counter at 01 and up/down arrows" loading="lazy"><figcaption>Parts tab</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Parts: equal pieces</h3>
+            <p>Instead of a time, you enter a number of parts. Every selected clip is split into that many pieces of equal length, however long it is. A longer clip gets longer parts, a shorter one shorter parts.</p>
+            <dl class="controls">
+              <div><dt>Number of parts</dt><dd>A number from 1 to 100. Type it, scroll it with the mouse wheel, or change it with the arrow keys. A value of 01 leaves the clip uncut.</dd></div>
+              <div><dt><span class="ctl">▲</span> <span class="ctl">▼</span></dt><dd>Adds or removes one part. Holding repeats.</dd></div>
+              <div><dt><span class="ctl">Randomness</span></dt><dd>Works the same as on the Time tab, see the next section.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="feature" id="randomness">
+          <div class="variants" style="grid-template-columns: minmax(0,1fr);">
+            <figure class="shot"><img src="../img/rand-synced.png" width="1140" height="465" alt="Randomness on at 10 %, Synced selected; the preview shows three tracks cut at the same points" loading="lazy"><figcaption>Synced: all tracks cut the same way</figcaption></figure>
+            <figure class="shot"><img src="../img/rand-indep.png" width="1140" height="465" alt="Randomness at 10 %, Independent selected; the preview shows three tracks with cuts at different points" loading="lazy"><figcaption>Independent: each track cut differently</figcaption></figure>
+          </div>
+          <div class="feature-text">
+            <h3>Randomness: pieces of uneven length</h3>
+            <p>The switch sits below the value field on both the Time and Parts tabs. When it is on, each piece gets a random length around the value you set, so the result doesn't look mechanical.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">OFF / ON</span></dt><dd>Turns randomness on or off. Off means every piece is exactly the same.</dd></div>
+              <div><dt>Slider <span class="tc">1–99 %</span></dt><dd>How much a piece's length may vary. At 5 s and 10 %, pieces come out roughly between 4.5 and 5.5 s. The default is 10 %.</dd></div>
+              <div><dt><span class="ctl">Synced</span></dt><dd>Clips that sit exactly on top of each other (same start and end, typically video with its linked audio, or the same clips on several tracks) get the <strong>same</strong> cuts. Picture and sound stay aligned.</dd></div>
+              <div><dt><span class="ctl">Independent</span></dt><dd>Each clip gets its own random cuts, even when it sits above another one. Useful when you want to scatter the tracks on purpose.</dd></div>
+              <div><dt>Colored preview</dt><dd>An illustration of the difference between Synced and Independent for three tracks. It shows the idea, not the exact result on your sequence.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="feature" id="sequence">
+          <div><figure class="shot"><img src="../img/seq-cycle.png" width="1140" height="850" alt="Sequence tab: timecode field with a gold border, three colored tiles 1, 2 and 3 Sec, a plus tile, a preview strip and the Cycle, Ping pong and Random options" loading="lazy"><figcaption>Sequence tab, Cycle order</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Sequence: your own rhythm of lengths</h3>
+            <p>You build a pattern from several lengths, for example 1 s, 2 s, 3 s. Cutter then cuts the clip by repeating that pattern, giving you an edit with a rhythm instead of identical pieces.</p>
+            <dl class="controls">
+              <div><dt>Colored tiles</dt><dd>The individual lengths in the pattern. Click a tile to select it: it gets a white outline and the timecode field above takes on its color. Whatever you set in the field then applies to that tile.</dd></div>
+              <div><dt>Timecode field</dt><dd>Works just like on the Time tab (typing, arrows, mouse wheel). The length must be greater than <span class="tc">00:00:00:00</span>.</dd></div>
+              <div><dt><span class="ctl">+</span></dt><dd>Adds a new tile at the end. It copies the length of the last tile and is selected right away.</dd></div>
+              <div><dt><span class="ctl">✕</span> on a tile</dt><dd>Removes the tile. The pattern needs at least two tiles, so the cross is hidden when only two are left.</dd></div>
+              <div><dt><span class="ctl">‹</span> <span class="ctl">›</span></dt><dd>Scroll the row of tiles when they don't fit in the panel.</dd></div>
+              <div><dt>Preview strip</dt><dd>Shows how the lengths line up one after another. The white outline marks the first pass through the pattern.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="variants">
+          <div class="variant">
+            <h3>Cycle</h3>
+            <p>The pattern repeats the same way every time: 1, 2, 3, 1, 2, 3…</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="../img/seq-ping.png" width="1140" height="400" alt="Ping pong preview: lengths 1, 2, 3, 2, 1, 2, 3, 2, 1" loading="lazy"><figcaption>Ping pong</figcaption></figure>
+            <h3>Ping pong</h3>
+            <p>Back and forth: 1, 2, 3, 2, 1, 2, 3… The end length is not repeated twice in a row at the turn.</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="../img/seq-random.png" width="1140" height="400" alt="Random preview: lengths in shuffled order" loading="lazy"><figcaption>Random</figcaption></figure>
+            <h3>Random</h3>
+            <p>The whole pattern is reshuffled after every pass. Each length appears exactly once per round, just in a different order each time.</p>
+          </div>
+        </div>
+        <div class="note"><b>Sequence has no Synced / Independent choice</b><span>In this mode, clips sitting exactly on top of each other are always cut at the same points.</span></div>
+
+        <div class="feature" id="cut-undo">
+          <div class="feature-text" style="grid-column: 1 / -1;">
+            <h3>CUT and Undo</h3>
+            <dl class="controls">
+              <div><dt><span class="ctl cut">✂ CUT</span></dt><dd>Cuts the selected clips according to the active tab. A status line appears below the buttons, for example “Done – 24 cuts made across 3 clips.” On a large selection a percentage progress bar shows up too.</dd></div>
+              <div><dt><span class="ctl ghost">Undo</span></dt><dd>Reverts the last CUT. It stays grey until you've cut something. Under the hood it runs Premiere's own Undo as many times as CUT made cuts. If some of them can't be reverted, the panel tells you how many, and you can finish the rest with Ctrl+Z.</dd></div>
+              <div><dt><span class="ctl">✕</span> on a message</dt><dd>Closes the status message below the buttons.</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= WEAVER ================= -->
+      <section id="weaver">
+        <div class="section-head">
+          <span class="part-tag">Bottom half</span>
+          <h2>Weaver: interleaving tracks</h2>
+          <p>Weaver takes the clips from <strong>all video tracks in the sequence</strong> (the selection doesn't matter) and lines them up on the timeline so the tracks take turns. Every clip stays on its own track and only moves in time. It starts where the earliest clip was, and the pieces butt up against each other with no gaps.</p>
+        </div>
+
+        <div class="tl-box" aria-label="Illustration: before and after interleaving">
+          <div class="tl">
+            <span class="tl-title">Before RUN</span>
+            <div class="tl-row"><span>V3</span><i class="c"></i><i class="c"></i><i class="c"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="tl-row"><span>V2</span><i class="b"></i><i class="b"></i><i class="b"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="tl-row"><span>V1</span><i class="a"></i><i class="a"></i><i class="a"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="tl">
+            <span class="tl-title">After RUN (Sequential · Cycle)</span>
+            <div class="tl-row"><span>V3</span><i></i><i></i><i class="c"></i><i></i><i></i><i class="c"></i><i></i><i></i><i class="c"></i></div>
+            <div class="tl-row"><span>V2</span><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i></div>
+            <div class="tl-row"><span>V1</span><i class="a"></i><i></i><i></i><i class="a"></i><i></i><i></i><i class="a"></i><i></i><i></i></div>
+          </div>
+          <p class="tl-caption">Three tracks cut by Cutter sit on top of each other. After RUN they alternate V1, V2, V3, V1… and play one after another. Linked audio moves along with the picture.</p>
+        </div>
+
+        <div class="feature" id="sequential">
+          <div><figure class="shot"><img src="../img/w-cycle.png" width="1140" height="775" alt="Weaver in Sequential mode with Cycle selected; the V1 to V4 grid shows the order V1, V2, V3, V4 repeating" loading="lazy"><figcaption>Sequential · Cycle</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Sequential: regular alternation</h3>
+            <p>The tracks alternate in a fixed order. The grid below the options shows what the order will look like. Its rows match the real video tracks in your sequence; the nine columns are just a sample.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">Sequential</span> <span class="ctl ghost">Random</span></dt><dd>The main order switch: regular or random.</dd></div>
+              <div><dt><span class="ctl">Cycle</span></dt><dd>Round and round in one direction: V1, V2, V3, V4, V1, V2…</dd></div>
+              <div><dt><span class="ctl">Ping pong</span></dt><dd>Back and forth: V1, V2, V3, V4, V3, V2, V1, V2… The end track is not repeated at the turn.</dd></div>
+              <div><dt><span class="ctl">Reverse Start order</span></dt><dd>Flips the starting direction: from the top track down (V4 → V1) instead of bottom up.</dd></div>
+              <div><dt>Caption under the grid</dt><dd>Spells out the chosen order, for example “Cycle (First → Last) · V1 → V2 → V3…”.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="variants">
+          <div class="variant">
+            <figure class="shot"><img src="../img/w-cycle-rev.png" width="1140" height="775" alt="Sequential Cycle with Reverse Start order on: order V4, V3, V2, V1" loading="lazy"><figcaption>Cycle + Reverse</figcaption></figure>
+            <p>Cycle with a reversed start: V4, V3, V2, V1, V4…</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="../img/w-ping.png" width="1140" height="775" alt="Sequential Ping pong: order V1, V2, V3, V4, V3, V2, V1" loading="lazy"><figcaption>Ping pong</figcaption></figure>
+            <p>Ping pong from the bottom: V1, V2, V3, V4, V3, V2, V1…</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="../img/w-ping-rev.png" width="1140" height="775" alt="Ping pong with Reverse Start order: order V4, V3, V2, V1, V2, V3, V4" loading="lazy"><figcaption>Ping pong + Reverse</figcaption></figure>
+            <p>Ping pong from the top: V4, V3, V2, V1, V2, V3…</p>
+          </div>
+        </div>
+
+        <div class="feature" id="random">
+          <div><figure class="shot"><img src="../img/w-random.png" width="1140" height="859" alt="Weaver in Random mode: the No repeated track back-to-back option, a random grid and the Seed button showing 6910" loading="lazy"><figcaption>Random</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Random: random alternation</h3>
+            <p>Pieces are picked from the tracks at random. The grid and RUN use the same random number (the seed), so the timeline gets exactly the order you see in the preview.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">No repeated track back-to-back</span></dt><dd>Makes sure two pieces from the same track never play right after each other. Available only when the sequence has more than two video tracks.</dd></div>
+              <div><dt><span class="ctl">⚄ Seed 6910</span></dt><dd>Each click rolls a new order and redraws the grid. Keep clicking until you like the preview, then hit RUN.</dd></div>
+            </dl>
+            <figure class="shot"><img src="../img/w-norepeat.png" width="1140" height="859" alt="Random with No repeated track back-to-back on: no track appears twice in a row in the grid" loading="lazy"><figcaption>Random + No repeated track back-to-back</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="feature" id="run-undo">
+          <div class="feature-text" style="grid-column: 1 / -1;">
+            <h3>RUN and Undo</h3>
+            <dl class="controls">
+              <div><dt><span class="ctl run">RUN</span></dt><dd>Rearranges the clips on the timeline according to your settings. It works directly on the sequence and makes no backup. Without an active sequence that has two video tracks with clips, RUN does nothing and just shows a message.</dd></div>
+              <div><dt><span class="ctl ghost">Undo</span></dt><dd>Moves every shifted clip back to its original place in one click. It works only for the last RUN, and only until you close the panel. If something doesn't go back, the panel lists it and Undo stays active so you can click it again.</dd></div>
+            </dl>
+            <div class="note warn"><b>Use Undo straight away</b><span>Weaver remembers where the clips were before RUN. If you move one of them by hand in the meantime, Undo puts it back where it was before RUN, not where you moved it.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TIPS ================= -->
+      <section id="tips">
+        <div class="section-head">
+          <h2>Tips and limits</h2>
+        </div>
+        <dl class="controls">
+          <div><dt>Locked tracks</dt><dd>Weaver skips tracks locked with the lock icon in Premiere's track header. Their clips (picture and sound) stay put and aren't counted in the grid. Handy for music or titles.</dd></div>
+          <div><dt>Audio in Weaver</dt><dd>Audio is paired by track number: A1 goes with V1, A2 with V2 and so on, piece by piece in time order. If the matching audio track is missing, Weaver looks for an audio clip with the same start and length. Audio without a match doesn't move.</dd></div>
+          <div><dt>Synced in Cutter</dt><dd>To have picture and sound cut identically, select both and leave Randomness on Synced.</dd></div>
+          <div><dt>Short clips</dt><dd>A clip shorter than the piece length is skipped by Cutter and left unchanged.</dd></div>
+          <div><dt>Sequence loading</dt><dd>If the panel starts before the project has loaded, it keeps looking for the sequence in the background. No need to close and reopen it.</dd></div>
+          <div><dt><span class="ctl ghost">Help</span></dt><dd>The link in the panel header. It doesn't lead anywhere yet in this version.</dd></div>
+        </dl>
+      </section>
+
+      <!-- ================= MESSAGES ================= -->
+      <section id="messages">
+        <div class="section-head">
+          <h2>Panel messages</h2>
+          <p>What the most common messages mean and what to do about them.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Message</th><th>What to do</th></tr></thead>
+            <tbody>
+              <tr><td>No clips selected in the timeline…</td><td>Select the clips you want Cutter to cut in the timeline and hit CUT again.</td></tr>
+              <tr><td>Enter an interval greater than 00:00:00:00.</td><td>The Time tab is set to zero. Enter at least one frame.</td></tr>
+              <tr><td>A segment needs to be longer than 00:00:00:00.</td><td>A tile in Sequence can't have zero length.</td></tr>
+              <tr><td>Nothing to cut — selection produced no cut points.</td><td>The selected clips are shorter than the piece length. Shorten it or use Parts.</td></tr>
+              <tr><td>Sequence info not loaded — try reopening the panel.</td><td>The panel hasn't found a sequence yet. Open one in Premiere; if that doesn't help, close and reopen the panel.</td></tr>
+              <tr><td>No video tracks identified. Open a sequence with at least 2 video tracks.</td><td>Weaver needs at least two unlocked video tracks that contain clips.</td></tr>
+              <tr><td>Done, but N move(s) failed – see the details below.</td><td>Some clips couldn't be moved. The list is below the buttons; consider Undo.</td></tr>
+              <tr><td>Undo only partially completed…</td><td>Click Undo again, or finish the rest with Ctrl+Z.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>Clip Weaver Ver 1.0 · Adobe Premiere Pro plugin. Screenshots taken from build ClipWeave_1.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clip Weaver – příručka</title>
+<meta name="description" content="Česká příručka k panelu Clip Weaver pro Adobe Premiere Pro: co dělá Cutter a Weaver a každé tlačítko.">
+<link rel="alternate" hreflang="cs" href="index.html">
+<link rel="alternate" hreflang="en" href="en/index.html">
+<style>
+/* základní reset (na claude.ai ho doplňoval publikační rámec) */
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* přepínač jazyka */
+.lang-switch { display: flex; gap: 6px; font-family: var(--f-mono); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; }
+.lang-switch a { text-decoration: none; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; background: var(--surface); }
+.lang-switch a:hover { color: var(--ink); border-color: var(--accent); }
+.lang-switch a[aria-current="page"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.hero-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+</style>
+<style>
+/* Layout: úzký sticky obsah vlevo + čtecí sloupec; každá funkce = screenshot panelu vedle seznamu ovládacích prvků */
+:root {
+  --bg: #eef1f4;
+  --surface: #ffffff;
+  --ink: #131a20;
+  --muted: #56636f;
+  --line: #d9e0e7;
+  --accent: #0a86c9;
+  --accent-soft: #e1f2fb;
+  --warn: #9a6a12;
+  --warn-soft: #fbf1dc;
+  --panel: #1d1f21;       /* pozadí screenshotů – stejné v obou režimech */
+  --panel-line: #2c3034;
+  --logo-mark: #00aeef;  /* modrá značka z loga, v obou režimech */
+  --v1: #439ddc; --v2: #5aa673; --v3: #b89245; --v4: #a374c4;
+  --f-display: "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;  /* stejné písmo jako panel Clip Weaver */
+  --f-body: "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --f-mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101316; --surface: #171b1f; --ink: #e7ecf0; --muted: #94a1ad; --line: #283038;
+    --accent: #1bb4ff; --accent-soft: #10283a; --warn: #e2b155; --warn-soft: #2a2214;
+    --panel: #1d1f21; --panel-line: #33383d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101316; --surface: #171b1f; --ink: #e7ecf0; --muted: #94a1ad; --line: #283038;
+  --accent: #1bb4ff; --accent-soft: #10283a; --warn: #e2b155; --warn-soft: #2a2214;
+  --panel: #1d1f21; --panel-line: #33383d;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -0.02em; }
+h1.logo { line-height: 0; }
+h1.logo svg { display: block; width: clamp(200px, 32vw, 300px); max-width: 100%; height: auto; }
+.lg-t { fill: var(--ink); }
+.lg-m { fill: var(--logo-mark); }
+h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(24px, 5vw, 64px);
+  align-items: center;
+  padding-block: clamp(32px, 6vw, 72px) clamp(24px, 4vw, 48px);
+}
+.eyebrow {
+  font-family: var(--f-mono); font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.hero-text { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.lead { font-size: 1.2rem; color: var(--muted); max-width: 34em; }
+.lead strong { color: var(--ink); }
+.halves { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.half {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; display: flex; flex-direction: column; gap: 4px;
+}
+.half b { font-family: var(--f-display); font-size: 1.1rem; }
+.half span { color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
+.hero-shot { justify-self: center; width: 100%; max-width: 420px; margin: 0; }
+.hero-shot img { display: block; width: 100%; height: auto; }
+
+/* ---------- Screenshot frame ---------- */
+.shot {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 18px 40px -24px rgba(10, 30, 50, .45);
+}
+.shot img { display: block; width: 100%; height: auto; }
+.shot figcaption {
+  font-family: var(--f-mono); font-size: 0.74rem; color: #9aa4ad; letter-spacing: 0.02em;
+  padding: 8px 12px; border-top: 1px solid var(--panel-line);
+}
+
+/* ---------- Main layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  padding-block: 16px 80px;
+}
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; }
+.toc p { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; border-left: 2px solid var(--line); }
+.toc a { display: block; padding: 5px 12px; margin-left: -2px; border-left: 2px solid transparent; color: var(--muted); text-decoration: none; font-size: 0.95rem; line-height: 1.35; }
+.toc a:hover { color: var(--ink); border-left-color: var(--accent); }
+.toc .sub a { padding-left: 24px; font-size: 0.88rem; }
+
+main { min-width: 0; display: flex; flex-direction: column; gap: 72px; }
+section { display: flex; flex-direction: column; gap: 22px; scroll-margin-top: 24px; }
+.section-head { display: flex; flex-direction: column; gap: 10px; max-width: 42em; }
+.section-head p { color: var(--muted); font-size: 1.08rem; }
+.part-tag {
+  align-self: flex-start; font-family: var(--f-mono); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+}
+
+/* Funkce: screenshot + popis ovládání */
+.feature {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(20px, 3vw, 36px);
+  align-items: start;
+  scroll-margin-top: 24px;
+}
+.feature > div { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.feature .shot { max-width: 520px; }
+.feature-text > p { max-width: 36em; }
+
+.controls { margin: 0; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.controls > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.controls dt { min-width: 0; }
+.controls dd { margin: 0; min-width: 0; color: var(--ink); line-height: 1.5; }
+.controls dd .muted { color: var(--muted); }
+
+/* Názvy tlačítek tak, jak vypadají v panelu */
+.ctl {
+  display: inline-block; font-family: var(--f-body); font-weight: 700; font-size: 0.86rem;
+  line-height: 1.2; padding: 4px 9px; border-radius: 6px;
+  background: var(--panel); color: #f1f3f5; border: 1px solid var(--panel-line); white-space: nowrap;
+}
+.ctl.cut { background: #ffffff; color: #0a86c9; border-color: #d6dde3; }
+.ctl.run { background: #1bb4ff; color: #ffffff; border-color: #1bb4ff; }
+.ctl.ghost { color: #8d969e; }
+.tc { font-family: var(--f-mono); font-weight: 700; font-size: 0.9em; letter-spacing: 0.02em; white-space: nowrap; }
+
+/* Varianty vedle sebe */
+.variants { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+.variant { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.variant h3 { font-size: 1.05rem; }
+.variant p { color: var(--muted); font-size: 0.98rem; }
+
+/* Poznámky */
+.note {
+  border-radius: 10px; padding: 14px 18px; background: var(--accent-soft);
+  display: flex; flex-direction: column; gap: 4px; max-width: 46em;
+}
+.note b { font-family: var(--f-display); }
+.note.warn { background: var(--warn-soft); }
+.note.warn b { color: var(--warn); }
+
+/* Kroky rychlého startu */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; counter-reset: step; }
+.steps li { counter-increment: step; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.steps li::before { content: counter(step); font-family: var(--f-mono); font-weight: 700; font-size: 0.8rem; color: var(--accent); }
+.steps b { font-family: var(--f-display); font-size: 1.05rem; }
+.steps span { color: var(--muted); font-size: 0.97rem; line-height: 1.5; }
+
+/* Mini timeline: před / po prokládání */
+.tl-box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
+.tl { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tl-title { font-family: var(--f-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.tl-row { display: grid; grid-template-columns: 26px repeat(9, minmax(0, 1fr)); gap: 3px; align-items: center; }
+.tl-row > span:first-child { font-family: var(--f-mono); font-size: 0.72rem; color: var(--muted); }
+.tl-row i { height: 16px; border-radius: 3px; background: transparent; }
+.tl-row i.a { background: var(--v1); } .tl-row i.b { background: var(--v2); } .tl-row i.c { background: var(--v3); }
+.tl-caption { grid-column: 1 / -1; color: var(--muted); font-size: 0.95rem; }
+
+/* Tabulka hlášek */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 0.96rem; }
+th, td { text-align: left; vertical-align: top; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+th { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-family: var(--f-mono); font-size: 0.84rem; width: 46%; }
+
+/* Video pod hlavní částí */
+.video { display: flex; flex-direction: column; gap: 12px; padding-block: 8px 40px; }
+.video-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.video-head h2 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); }
+.video-head a { font-size: 0.95rem; }
+.video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 700px) { .video-grid { grid-template-columns: minmax(0, 1fr); } }
+.video-frame { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--panel); border: 1px solid var(--panel-line); box-shadow: 0 18px 40px -24px rgba(10, 30, 50, .45); }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+a.video-frame { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-decoration: none; color: #f1f3f5; background: radial-gradient(120% 90% at 50% 40%, #23272b 0%, var(--panel) 70%); }
+a.video-frame:hover .play { transform: scale(1.06); }
+.play { width: 76px; height: 76px; border-radius: 50%; background: #1bb4ff; display: grid; place-items: center; transition: transform .15s ease; }
+.play svg { width: 30px; height: 30px; margin-left: 4px; fill: #ffffff; }
+.video-frame .vlabel { font-weight: 700; font-size: 1.05rem; }
+.video-frame .vsub { font-family: var(--f-mono); font-size: 0.78rem; color: #9aa4ad; }
+@media (prefers-reduced-motion: reduce) { .play { transition: none; } }
+footer { border-top: 1px solid var(--line); padding-block: 24px 40px; color: var(--muted); font-size: 0.9rem; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero-shot { max-width: 360px; justify-self: start; }
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .toc { position: static; }
+  .toc ol { flex-direction: row; flex-wrap: wrap; border-left: 0; gap: 6px; }
+  .toc .sub { display: none; }
+  .toc a { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; margin: 0; background: var(--surface); }
+  .feature { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .halves { grid-template-columns: 1fr; }
+  .controls > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .tl-box { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="hero-text">
+      <div class="hero-top">
+      <span class="eyebrow">Plugin pro Adobe Premiere Pro · Ver 1.0</span>
+        <nav class="lang-switch" aria-label="Jazyk"><a href="index.html" hreflang="cs" aria-current="page">CZ</a><a href="en/index.html" hreflang="en" lang="en">EN</a></nav>
+      </div>
+      <h1 class="logo"><svg viewBox="0 0 448.84 135.2" role="img" aria-label="Clip Weaver"><title>Clip Weaver</title><path class="lg-t" d="M197.9,58.57c-2.5,1.25-7.49,2.5-13.88,2.5-14.82,0-25.97-9.36-25.97-26.6s11.15-27.61,27.46-27.61c6.55,0,10.69,1.4,12.48,2.34l-1.64,5.54c-2.57-1.25-6.24-2.18-10.61-2.18-12.32,0-20.51,7.88-20.51,21.69,0,12.87,7.41,21.14,20.2,21.14,4.13,0,8.35-.86,11.08-2.18l1.4,5.38Z"/><path class="lg-t" d="M206.4,7.71h6.79v46.88h22.46v5.69h-29.25V7.71Z"/><path class="lg-t" d="M250,7.71v52.57h-6.79V7.71h6.79Z"/><path class="lg-t" d="M261.86,8.33c3.28-.55,7.57-1.01,13.03-1.01,6.71,0,11.62,1.56,14.74,4.37,2.89,2.5,4.6,6.32,4.6,11s-1.4,8.5-4.06,11.23c-3.59,3.82-9.44,5.77-16.07,5.77-2.03,0-3.9-.08-5.46-.47v21.06h-6.79V8.33ZM268.65,33.68c1.48.39,3.35.55,5.62.55,8.19,0,13.18-3.98,13.18-11.23s-4.92-10.3-12.4-10.3c-2.96,0-5.23.23-6.4.55v20.44Z"/><path class="lg-t" d="M168.88,128.57l-12.48-52.57h12.71l3.98,21.69c1.17,6.24,2.26,13.03,3.12,18.33h.16c.86-5.69,2.11-12.01,3.43-18.49l4.45-21.53h12.64l4.21,22.15c1.17,6.16,2.03,11.78,2.81,17.63h.16c.78-5.85,1.95-12.01,3.04-18.25l4.29-21.53h12.09l-13.57,52.57h-12.87l-4.45-22.62c-1.01-5.3-1.87-10.22-2.5-16.22h-.16c-.94,5.93-1.79,10.92-3.04,16.22l-4.99,22.62h-13.03Z"/><path class="lg-t" d="M260.92,106.34h-19.34v12.48h21.61v9.75h-33.54v-52.57h32.45v9.75h-20.51v10.92h19.34v9.67Z"/><path class="lg-t" d="M283.55,115.07l-3.74,13.49h-12.32l16.07-52.57h15.6l16.3,52.57h-12.79l-4.06-13.49h-15.05ZM296.88,106.18l-3.28-11.15c-.94-3.12-1.87-7.02-2.65-10.14h-.16c-.78,3.12-1.56,7.1-2.42,10.14l-3.12,11.15h11.62Z"/><path class="lg-t" d="M330.27,128.57l-16.85-52.57h13.03l6.4,22.23c1.79,6.24,3.43,12.25,4.68,18.8h.23c1.33-6.32,2.96-12.56,4.76-18.56l6.71-22.46h12.64l-17.71,52.57h-13.88Z"/><path class="lg-t" d="M398.76,106.34h-19.34v12.48h21.61v9.75h-33.54v-52.57h32.45v9.75h-20.51v10.92h19.34v9.67Z"/><path class="lg-t" d="M409.14,76.7c3.82-.62,9.52-1.09,15.83-1.09,7.8,0,13.26,1.17,17,4.13,3.12,2.5,4.84,6.16,4.84,11,0,6.71-4.76,11.31-9.28,12.95v.23c3.67,1.48,5.69,4.99,7.02,9.83,1.64,5.93,3.28,12.79,4.29,14.82h-12.17c-.86-1.48-2.11-5.77-3.67-12.25-1.4-6.55-3.67-8.35-8.5-8.42h-3.59v20.67h-11.78v-51.87ZM420.91,99.32h4.68c5.93,0,9.44-2.96,9.44-7.57,0-4.84-3.28-7.25-8.74-7.33-2.89,0-4.52.23-5.38.39v14.51Z"/><rect class="lg-m" x="66.22" y="67.22" width="33.75" height="61.93" transform="translate(166.18 196.37) rotate(-180)"/><rect class="lg-m" x="0" y="67.22" width="33.75" height="61.93" transform="translate(33.75 196.37) rotate(-180)"/><rect class="lg-m" x="32.89" y="5.99" width="33.75" height="61.93" transform="translate(99.54 73.92) rotate(-180)"/><rect class="lg-m" x="99.96" y="5.99" width="33.75" height="61.93" transform="translate(233.68 73.92) rotate(-180)"/></svg></h1>
+      <p class="lead">Jeden panel, dva nástroje. Nahoře <strong>Cutter</strong> rozřeže vybrané klipy na kousky. Dole <strong>Weaver</strong> ty kousky z několika video stop proplete za sebe na timeline.</p>
+    </div>
+    <figure class="hero-shot">
+      <img src="img/hero.png" width="1011" height="1408" alt="Celý panel Clip Weaver: nahoře záložky Time, Parts, Sequence s časovým polem a tlačítkem CUT, dole Sequential/Random s mřížkou stop a tlačítkem RUN">
+    </figure>
+  </header>
+  <section class="video" id="video" aria-label="Video">
+    <div class="video-head"><h2>Clip Weaver v akci</h2><a href="https://youtu.be/oRWlmi5z_Bw">Otevřít na YouTube ↗</a></div>
+    <div class="video-grid">
+      <div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/oRWlmi5z_Bw" title="Clip Weaver – video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Obsah">
+      <p>Obsah</p>
+      <ol>
+        <li><a href="#start">Rychlý start</a></li>
+        <li><a href="#cutter">Cutter</a></li>
+        <li class="sub"><a href="#time">Time</a></li>
+        <li class="sub"><a href="#parts">Parts</a></li>
+        <li class="sub"><a href="#randomness">Randomness</a></li>
+        <li class="sub"><a href="#sequence">Sequence</a></li>
+        <li class="sub"><a href="#cut-undo">CUT a Undo</a></li>
+        <li><a href="#weaver">Weaver</a></li>
+        <li class="sub"><a href="#sequential">Sequential</a></li>
+        <li class="sub"><a href="#random">Random</a></li>
+        <li class="sub"><a href="#run-undo">RUN a Undo</a></li>
+        <li><a href="#tips">Tipy a omezení</a></li>
+        <li><a href="#messages">Hlášky panelu</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <!-- ================= RYCHLÝ START ================= -->
+      <section id="start">
+        <div class="section-head">
+          <h2>Rychlý start</h2>
+          <p>Typický postup: nejdřív klipy rozřezat, pak je propléct. Obě části ale fungují i samostatně.</p>
+        </div>
+        <ol class="steps">
+          <li><b>Otevři sekvenci</b><span>Panel si aktivní sekvenci najde sám, i když ji otevřeš až po panelu.</span></li>
+          <li><b>Vyber klipy a dej CUT</b><span>V timeline označ klipy, nahoře nastav délku kousků a klikni na <span class="ctl cut">CUT</span>.</span></li>
+          <li><b>Zvol pořadí a dej RUN</b><span>Dole vyber Sequential nebo Random, zkontroluj mřížku a klikni na <span class="ctl run">RUN</span>.</span></li>
+          <li><b>Nelíbí se? Undo</b><span>Každá část má vlastní <span class="ctl">Undo</span>, které vrátí její poslední akci.</span></li>
+        </ol>
+      </section>
+
+      <!-- ================= CUTTER ================= -->
+      <section id="cutter">
+        <div class="section-head">
+          <span class="part-tag">Horní část</span>
+          <h2>Cutter: řezání klipů</h2>
+          <p>Cutter pracuje jen s klipy, které máš <strong>vybrané v timeline</strong>. Každý klip řeže od jeho vlastního začátku. Nahoře jsou tři záložky, které určují, jak se délka kousků počítá.</p>
+        </div>
+
+        <div class="feature" id="time">
+          <div><figure class="shot"><img src="img/cut-time.png" width="1140" height="560" alt="Záložka Time s časovým polem 00:00:05:00, přepínačem Randomness OFF a tlačítky Undo a CUT" loading="lazy"><figcaption>Záložka Time</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Time: řez po pevném čase</h3>
+            <p>Zadáš délku jednoho kousku jako timecode. Výchozí hodnota <span class="tc">00:00:05:00</span> znamená, že se každý vybraný klip rozřeže po pěti sekundách. Poslední kousek je kratší, pokud klip nevychází přesně.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">Time</span> <span class="ctl ghost">Parts</span> <span class="ctl ghost">Sequence</span></dt><dd>Přepínání tří režimů řezání. Aktivní záložka je zvýrazněná.</dd></div>
+              <div><dt><span class="tc">HH : MM : SS : FF</span></dt><dd>Hodiny, minuty, sekundy a snímky. Do každého pole jde psát. Klik do pole ho označí jako aktivní (popisek nad ním zmodrá). <span class="muted">Na začátku je aktivní FF.</span></dd></div>
+              <div><dt><span class="ctl">▲</span> <span class="ctl">▼</span></dt><dd>Přidá nebo ubere 1 v <em>aktivním</em> poli. Když tlačítko podržíš, hodnota běží dál a postupně zrychluje.</dd></div>
+              <div><dt>Kolečko myši, šipky</dt><dd>Nad polem kolečkem nahoru/dolů, v poli šipkami ↑ ↓. Mění přímo to pole, nad kterým jsi.</dd></div>
+              <div><dt>Přetečení</dt><dd>Hodnoty se samy přepočítají: když napíšeš 30 snímků v sekvenci 30 fps, z toho je 1 sekunda. Snímky se počítají podle frame rate aktivní sekvence.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="feature" id="parts">
+          <div><figure class="shot"><img src="img/cut-parts.png" width="1140" height="560" alt="Záložka Parts s počítadlem dílů 01 a šipkami" loading="lazy"><figcaption>Záložka Parts</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Parts: na stejné díly</h3>
+            <p>Místo času zadáš počet dílů. Každý vybraný klip se rozdělí na tolik stejně dlouhých kousků, bez ohledu na to, jak je dlouhý. Delší klip má delší díly, kratší kratší.</p>
+            <dl class="controls">
+              <div><dt>Počet dílů</dt><dd>Číslo 1 až 100. Jde psát, točit kolečkem nebo měnit šipkami na klávesnici. Hodnota 01 klip nerozřeže.</dd></div>
+              <div><dt><span class="ctl">▲</span> <span class="ctl">▼</span></dt><dd>Přidá nebo ubere jeden díl. Podržení opakuje.</dd></div>
+              <div><dt><span class="ctl">Randomness</span></dt><dd>Funguje stejně jako u Time, viz další oddíl.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="feature" id="randomness">
+          <div class="variants" style="grid-template-columns: minmax(0,1fr);">
+            <figure class="shot"><img src="img/rand-synced.png" width="1140" height="465" alt="Randomness zapnuté na 10 %, zvoleno Synced; náhled ukazuje tři stopy rozřezané na stejných místech" loading="lazy"><figcaption>Synced: všechny stopy řezané stejně</figcaption></figure>
+            <figure class="shot"><img src="img/rand-indep.png" width="1140" height="465" alt="Randomness 10 %, zvoleno Independent; náhled ukazuje tři stopy s řezy na různých místech" loading="lazy"><figcaption>Independent: každá stopa jinak</figcaption></figure>
+          </div>
+          <div class="feature-text">
+            <h3>Randomness: kousky nebudou stejně dlouhé</h3>
+            <p>Přepínač je pod polem s hodnotou u záložek Time i Parts. Když je zapnutý, každý kousek dostane náhodnou délku kolem zadané hodnoty. Výsledek pak nepůsobí strojově.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">OFF / ON</span></dt><dd>Zapne nebo vypne náhodnost. Vypnuto = všechny kousky přesně stejné.</dd></div>
+              <div><dt>Posuvník <span class="tc">1–99 %</span></dt><dd>O kolik se smí délka kousku lišit. Při 5 s a 10 % vycházejí kousky zhruba mezi 4,5 a 5,5 s. Výchozí je 10 %.</dd></div>
+              <div><dt><span class="ctl">Synced</span></dt><dd>Klipy, které leží přesně nad sebou (stejný začátek i konec, typicky video s linkovaným zvukem nebo stejné klipy na více stopách), dostanou <strong>stejné</strong> řezy. Obraz a zvuk zůstanou sladěné.</dd></div>
+              <div><dt><span class="ctl">Independent</span></dt><dd>Každý klip dostane vlastní náhodné řezy, i když leží nad jiným. Hodí se, když chceš stopy záměrně rozházet.</dd></div>
+              <div><dt>Barevný náhled</dt><dd>Ilustrace rozdílu mezi Synced a Independent pro tři stopy. Ukazuje princip, ne přesný výsledek na tvé sekvenci.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="feature" id="sequence">
+          <div><figure class="shot"><img src="img/seq-cycle.png" width="1140" height="850" alt="Záložka Sequence: časové pole se zlatým rámečkem, tři barevné dlaždice 1, 2 a 3 Sec, dlaždice plus, náhledový pruh a volby Cycle, Ping pong, Random" loading="lazy"><figcaption>Záložka Sequence, pořadí Cycle</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Sequence: vlastní rytmus délek</h3>
+            <p>Poskládáš vzor z několika délek, například 1 s, 2 s, 3 s. Cutter pak klip řeže podle tohoto vzoru opakovaně. Vznikne střih s rytmem místo stejných kousků.</p>
+            <dl class="controls">
+              <div><dt>Barevné dlaždice</dt><dd>Jednotlivé délky ve vzoru. Klikem dlaždici vybereš: dostane bílý rámeček a časové pole nahoře se orámuje její barvou. Co pak nastavíš v poli, platí pro tuhle dlaždici.</dd></div>
+              <div><dt>Časové pole</dt><dd>Ovládá se stejně jako u Time (psaní, šipky, kolečko). Délka musí být větší než <span class="tc">00:00:00:00</span>.</dd></div>
+              <div><dt><span class="ctl">+</span></dt><dd>Přidá novou dlaždici na konec. Převezme délku poslední dlaždice a rovnou se vybere.</dd></div>
+              <div><dt><span class="ctl">✕</span> na dlaždici</dt><dd>Odebere dlaždici. Ve vzoru musí zůstat aspoň dvě, proto se křížek u posledních dvou neukazuje.</dd></div>
+              <div><dt><span class="ctl">‹</span> <span class="ctl">›</span></dt><dd>Posouvají řadou dlaždic, když se do panelu nevejdou.</dd></div>
+              <div><dt>Náhledový pruh</dt><dd>Ukazuje, jak se délky za sebou poskládají. Bíle orámovaný je první průchod vzorem.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="variants">
+          <div class="variant">
+            <h3>Cycle</h3>
+            <p>Vzor se opakuje pořád stejně: 1, 2, 3, 1, 2, 3…</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="img/seq-ping.png" width="1140" height="400" alt="Náhled pro Ping pong: délky 1, 2, 3, 2, 1, 2, 3, 2, 1" loading="lazy"><figcaption>Ping pong</figcaption></figure>
+            <h3>Ping pong</h3>
+            <p>Tam a zpátky: 1, 2, 3, 2, 1, 2, 3… Krajní délka se na obratu neopakuje dvakrát po sobě.</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="img/seq-random.png" width="1140" height="400" alt="Náhled pro Random: délky v zamíchaném pořadí" loading="lazy"><figcaption>Random</figcaption></figure>
+            <h3>Random</h3>
+            <p>Celý vzor se po každém průchodu zamíchá. Každá délka se tak v jednom kole objeví právě jednou, jen pokaždé v jiném pořadí.</p>
+          </div>
+        </div>
+        <div class="note"><b>U Sequence se nevolí Synced / Independent</b><span>Klipy ležící přesně nad sebou se v tomto režimu řežou vždy na stejných místech.</span></div>
+
+        <div class="feature" id="cut-undo">
+          <div class="feature-text" style="grid-column: 1 / -1;">
+            <h3>CUT a Undo</h3>
+            <dl class="controls">
+              <div><dt><span class="ctl cut">✂ CUT</span></dt><dd>Spustí řezání vybraných klipů podle aktivní záložky. Pod tlačítky se ukáže stav, například „Done – 24 cuts made across 3 clips.“ U velkého výběru se objeví i ukazatel průběhu v procentech.</dd></div>
+              <div><dt><span class="ctl ghost">Undo</span></dt><dd>Vrátí poslední CUT. Je šedé, dokud nic nerozřežeš. Uvnitř zavolá vlastní Undo Premiere tolikrát, kolik řezů CUT udělal. Pokud se část nepovede vrátit, panel napíše kolik, a zbytek dodělej ručně přes Ctrl+Z.</dd></div>
+              <div><dt><span class="ctl">✕</span> u hlášky</dt><dd>Zavře stavovou hlášku pod tlačítky.</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= WEAVER ================= -->
+      <section id="weaver">
+        <div class="section-head">
+          <span class="part-tag">Spodní část</span>
+          <h2>Weaver: proplétání stop</h2>
+          <p>Weaver vezme klipy ze <strong>všech video stop sekvence</strong> (nezáleží na výběru) a seřadí je na timeline za sebe tak, aby se stopy střídaly. Každý klip zůstane na své stopě, jen se posune v čase. Začíná se tam, kde ležel nejdřívější klip, a kousky na sebe navazují bez mezer.</p>
+        </div>
+
+        <div class="tl-box" aria-label="Ilustrace: před a po prokládání">
+          <div class="tl">
+            <span class="tl-title">Před RUN</span>
+            <div class="tl-row"><span>V3</span><i class="c"></i><i class="c"></i><i class="c"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="tl-row"><span>V2</span><i class="b"></i><i class="b"></i><i class="b"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="tl-row"><span>V1</span><i class="a"></i><i class="a"></i><i class="a"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="tl">
+            <span class="tl-title">Po RUN (Sequential · Cycle)</span>
+            <div class="tl-row"><span>V3</span><i></i><i></i><i class="c"></i><i></i><i></i><i class="c"></i><i></i><i></i><i class="c"></i></div>
+            <div class="tl-row"><span>V2</span><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i></div>
+            <div class="tl-row"><span>V1</span><i class="a"></i><i></i><i></i><i class="a"></i><i></i><i></i><i class="a"></i><i></i><i></i></div>
+          </div>
+          <p class="tl-caption">Tři stopy rozřezané Cutterem leží přes sebe. Po RUN se střídají V1, V2, V3, V1… a hrají jedna po druhé. Linkovaný zvuk se posune s obrazem.</p>
+        </div>
+
+        <div class="feature" id="sequential">
+          <div><figure class="shot"><img src="img/w-cycle.png" width="1140" height="775" alt="Weaver v režimu Sequential, zvoleno Cycle; mřížka V1 až V4 ukazuje pořadí V1, V2, V3, V4 dokola" loading="lazy"><figcaption>Sequential · Cycle</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Sequential: pravidelné střídání</h3>
+            <p>Stopy se střídají v pevném pořadí. Mřížka pod volbami ukazuje, jak bude pořadí vypadat. Řádky odpovídají skutečným video stopám v sekvenci, sloupců je pro ukázku vždy devět.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">Sequential</span> <span class="ctl ghost">Random</span></dt><dd>Hlavní přepínač pořadí: pravidelně, nebo náhodně.</dd></div>
+              <div><dt><span class="ctl">Cycle</span></dt><dd>Dokola ve stejném směru: V1, V2, V3, V4, V1, V2…</dd></div>
+              <div><dt><span class="ctl">Ping pong</span></dt><dd>Tam a zpět: V1, V2, V3, V4, V3, V2, V1, V2… Krajní stopa se na obratu neopakuje.</dd></div>
+              <div><dt><span class="ctl">Reverse Start order</span></dt><dd>Otočí směr, kterým se začíná: od nejvyšší stopy dolů (V4 → V1) místo zdola nahoru.</dd></div>
+              <div><dt>Popisek pod mřížkou</dt><dd>Slovně vypíše zvolené pořadí, například „Cycle (First → Last) · V1 → V2 → V3…“.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="variants">
+          <div class="variant">
+            <figure class="shot"><img src="img/w-cycle-rev.png" width="1140" height="775" alt="Sequential Cycle se zapnutým Reverse Start order: pořadí V4, V3, V2, V1" loading="lazy"><figcaption>Cycle + Reverse</figcaption></figure>
+            <p>Cycle s obráceným startem: V4, V3, V2, V1, V4…</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="img/w-ping.png" width="1140" height="775" alt="Sequential Ping pong: pořadí V1, V2, V3, V4, V3, V2, V1" loading="lazy"><figcaption>Ping pong</figcaption></figure>
+            <p>Ping pong odspodu: V1, V2, V3, V4, V3, V2, V1…</p>
+          </div>
+          <div class="variant">
+            <figure class="shot"><img src="img/w-ping-rev.png" width="1140" height="775" alt="Ping pong s Reverse Start order: pořadí V4, V3, V2, V1, V2, V3, V4" loading="lazy"><figcaption>Ping pong + Reverse</figcaption></figure>
+            <p>Ping pong shora: V4, V3, V2, V1, V2, V3…</p>
+          </div>
+        </div>
+
+        <div class="feature" id="random">
+          <div><figure class="shot"><img src="img/w-random.png" width="1140" height="859" alt="Weaver v režimu Random: volba No repeated track back-to-back, náhodná mřížka a tlačítko Seed s číslem 6910" loading="lazy"><figcaption>Random</figcaption></figure></div>
+          <div class="feature-text">
+            <h3>Random: náhodné střídání</h3>
+            <p>Kousky se vybírají ze stop náhodně. Mřížka i RUN používají stejné náhodné číslo (seed), takže na timeline dostaneš přesně to pořadí, které vidíš v náhledu.</p>
+            <dl class="controls">
+              <div><dt><span class="ctl">No repeated track back-to-back</span></dt><dd>Zajistí, že dva kousky ze stejné stopy nepůjdou hned po sobě. Dá se zapnout jen tehdy, když má sekvence víc než dvě video stopy.</dd></div>
+              <div><dt><span class="ctl">⚄ Seed 6910</span></dt><dd>Každý klik vylosuje nové pořadí a překreslí mřížku. Klikej, dokud se ti náhled nelíbí, pak dej RUN.</dd></div>
+            </dl>
+            <figure class="shot"><img src="img/w-norepeat.png" width="1140" height="859" alt="Random se zapnutým No repeated track back-to-back: žádná stopa se v mřížce neopakuje dvakrát za sebou" loading="lazy"><figcaption>Random + No repeated track back-to-back</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="feature" id="run-undo">
+          <div class="feature-text" style="grid-column: 1 / -1;">
+            <h3>RUN a Undo</h3>
+            <dl class="controls">
+              <div><dt><span class="ctl run">RUN</span></dt><dd>Přeskládá klipy na timeline podle nastavení. Pracuje přímo na sekvenci a nedělá zálohu. Bez aktivní sekvence se dvěma video stopami s klipy RUN nic neudělá a jen ukáže hlášku.</dd></div>
+              <div><dt><span class="ctl ghost">Undo</span></dt><dd>Vrátí všechny posunuté klipy na původní místo jedním klikem. Funguje jen pro poslední RUN a jen dokud panel nezavřeš. Když se něco nevrátí, panel vypíše seznam a Undo zůstane aktivní, takže ho jde kliknout znovu.</dd></div>
+            </dl>
+            <div class="note warn"><b>Undo dej hned</b><span>Weaver si pamatuje, kde klipy ležely před RUN. Když mezitím některý klip ručně posuneš, Undo ho vrátí na původní pozici před RUN, ne tam, kam jsi ho dal.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TIPY ================= -->
+      <section id="tips">
+        <div class="section-head">
+          <h2>Tipy a omezení</h2>
+        </div>
+        <dl class="controls">
+          <div><dt>Zamčená stopa</dt><dd>Stopy zamčené zámkem v hlavičce Premiere Weaver vynechá. Jejich klipy (obraz i zvuk) zůstanou na místě a v mřížce se nepočítají. Hodí se třeba pro hudbu nebo titulky.</dd></div>
+          <div><dt>Zvuk ve Weaveru</dt><dd>Zvuk se páruje podle čísla stopy: k V1 patří A1, k V2 A2 a tak dál, kousek po kousku v časovém pořadí. Když odpovídající audio stopa chybí, hledá se zvukový klip se stejným začátkem i délkou. Zvuk bez páru se nehýbe.</dd></div>
+          <div><dt>Synced v Cutteru</dt><dd>Chceš-li mít obraz a zvuk rozřezané stejně, vyber oba a nech Randomness na Synced.</dd></div>
+          <div><dt>Krátké klipy</dt><dd>Klip, který je kratší než zadaný kousek, Cutter přeskočí beze změny.</dd></div>
+          <div><dt>Načítání sekvence</dt><dd>Když panel naběhne dřív než projekt, zkouší sekvenci hledat dál na pozadí. Nemusíš ho zavírat a otevírat.</dd></div>
+          <div><dt><span class="ctl ghost">Help</span></dt><dd>Odkaz v hlavičce panelu. V této verzi zatím nikam nevede.</dd></div>
+        </dl>
+      </section>
+
+      <!-- ================= HLÁŠKY ================= -->
+      <section id="messages">
+        <div class="section-head">
+          <h2>Hlášky panelu</h2>
+          <p>Panel píše anglicky. Tady je, co nejčastější hlášky znamenají a co s nimi.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Hláška</th><th>Co dělat</th></tr></thead>
+            <tbody>
+              <tr><td>No clips selected in the timeline…</td><td>V timeline označ klipy, které má Cutter rozřezat, a dej CUT znovu.</td></tr>
+              <tr><td>Enter an interval greater than 00:00:00:00.</td><td>V záložce Time je nastavená nulová délka. Zadej aspoň jeden snímek.</td></tr>
+              <tr><td>A segment needs to be longer than 00:00:00:00.</td><td>Dlaždice v Sequence nemůže mít nulovou délku.</td></tr>
+              <tr><td>Nothing to cut — selection produced no cut points.</td><td>Vybrané klipy jsou kratší než zadaný kousek. Zkrať délku nebo použij Parts.</td></tr>
+              <tr><td>Sequence info not loaded — try reopening the panel.</td><td>Panel ještě nenašel sekvenci. Otevři ji v Premiere; když to nepomůže, zavři a otevři panel.</td></tr>
+              <tr><td>No video tracks identified. Open a sequence with at least 2 video tracks.</td><td>Weaver potřebuje aspoň dvě odemčené video stopy, na kterých jsou klipy.</td></tr>
+              <tr><td>Done, but N move(s) failed – see the details below.</td><td>Některé klipy se nepodařilo posunout. Seznam je pod tlačítky; zvaž Undo.</td></tr>
+              <tr><td>Undo only partially completed…</td><td>Klikni na Undo znovu, nebo dodělej zbytek přes Ctrl+Z.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>Clip Weaver Ver 1.0 · plugin pro Adobe Premiere Pro. Screenshoty pocházejí z verze ClipWeave_1.</footer>
+</div>
+</body>
+</html>
