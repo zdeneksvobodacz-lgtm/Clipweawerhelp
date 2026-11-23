@@ -22,14 +22,15 @@ body {
   font-family: "Selawik", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;
 }
 h1 { margin: 0; font-size: clamp(2.2rem, 7vw, 4.5rem); font-weight: 700; letter-spacing: -0.02em; text-align: center; }
-.zs-logo { position: fixed; top: max(16px, env(safe-area-inset-top, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); width: clamp(40px, 6vw, 56px); height: auto; display: block; border-radius: 9%; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .zs-logo { box-shadow: 0 0 0 1px #4a4a4a; } }
-:root[data-theme="dark"] .zs-logo { box-shadow: 0 0 0 1px #4a4a4a; }
+.zs-logo { position: fixed; top: max(16px, env(safe-area-inset-top, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); width: clamp(40px, 6vw, 56px); height: auto; display: block; }
+.zs-ink { fill: #231f20; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .zs-ink { fill: #fff; } }
+:root[data-theme="dark"] .zs-ink { fill: #fff; }
 h1::after { content: ""; display: block; width: 56px; height: 4px; margin: 20px auto 0; border-radius: 2px; background: var(--mark); }
 </style>
 </head>
 <body>
-<svg class="zs-logo" viewBox="0 0 408.86 408.86" role="img" aria-label="ZS logo"><title>ZS</title><rect width="408.86" height="408.86" rx="37.5" ry="37.5" fill="#231f20"/><path d="M105.42,86.95h198.02l-51.87,61.64-49.87.02c-13.67-.33-30.78,14.78-15,30.56l46.01,51.84.59.72c8.66,10.6,1.53,26.53-12.14,27.15l-3.79.17-58.88-.18-53.08,63.03h198.02" fill="none" stroke="#fff" stroke-linecap="square" stroke-linejoin="round" stroke-width="30"/></svg>
+<svg class="zs-logo" viewBox="0 0 442.86 442.86" role="img" aria-label="ZS logo"><title>ZS</title><path class="zs-ink" d="M442.86,442.86H0V0h442.86v442.86ZM34,408.86h374.86V34H34v374.86Z"/><path class="zs-ink" d="M319.62,343.17H126.91c-6.4,0-12.23-3.71-14.93-9.52-2.7-5.81-1.79-12.65,2.33-17.55l47.24-56.1c3.13-3.72,7.74-5.86,12.59-5.86h.05l51.53.16-38.5-43.38c-9.72-9.98-12.61-22.69-7.72-34.11,5.21-12.16,18.87-20.8,32.69-20.8.19,0,.38,0,.57,0l36.55-.02,18.46-21.94H110.45v-32.93h192.71c6.4,0,12.23,3.71,14.93,9.52,2.7,5.8,1.79,12.65-2.33,17.55l-46.16,54.86c-3.13,3.72-7.73,5.86-12.59,5.86l-44.38.02h0c-.13,0-.27,0-.4,0-.09,0-.26.02-.41.05l40.73,45.89c.15.17.3.34.44.51l.52.64c7.53,9.21,9.19,21.68,4.33,32.55-4.86,10.86-15.26,17.94-27.14,18.48l-3.37.15c-.27.01-.53.02-.8.02l-44.71-.14-19.49,23.14h157.32v32.93Z"/></svg>
 <h1>Coming soon</h1>
 </body>
 </html>
