@@ -72,7 +72,12 @@ p { margin: 0; }
 a { color: var(--accent); }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
-.wrap { max-width: 1180px; margin: 0 auto; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-top: clamp(48px, 6vw, 64px); }
+
+/* Logo ZS v levém horním rohu stránky (odroluje se se stránkou) */
+.zs-logo { position: absolute; top: 16px; left: max(16px, env(safe-area-inset-left, 0px)); width: clamp(40px, 6vw, 56px); height: auto; display: block; border-radius: 9%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .zs-logo { box-shadow: 0 0 0 1px #4a4a4a; } }
+:root[data-theme="dark"] .zs-logo { box-shadow: 0 0 0 1px #4a4a4a; }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -181,8 +186,9 @@ section { display: flex; flex-direction: column; gap: 22px; scroll-margin-top: 2
 
 /* Názvy prvků tak, jak vypadají v panelu */
 .ctl {
-  display: inline-block; font-family: var(--f-body); font-weight: 400; font-size: 0.86rem;
-  line-height: 1.2; padding: 4px 9px; border-radius: 4px;
+  /* inline (ne inline-block): rámeček nezvětšuje výšku řádku, takže se tlačítka v textu nepřekrývají */
+  display: inline; font-family: var(--f-body); font-weight: 400; font-size: 0.8em;
+  padding: 0.05em 0.45em; border-radius: 3px;
   background: var(--panel); color: #e6e6e6; border: 1px solid #4a4a4a; white-space: nowrap;
 }
 .ctl.btn { text-transform: uppercase; letter-spacing: 0.06em; }
@@ -212,7 +218,7 @@ section { display: flex; flex-direction: column; gap: 22px; scroll-margin-top: 2
 .steps li { counter-increment: step; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
 .steps li::before { content: counter(step); font-family: var(--f-mono); font-weight: 700; font-size: 0.8rem; color: var(--accent); }
 .steps b { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; }
-.steps span { color: var(--muted); font-size: 0.97rem; line-height: 1.5; }
+.steps li > span { color: var(--muted); font-size: 0.97rem; line-height: 1.5; }
 
 /* Mini timeline: před / po prokládání – vypadá jako mřížka v panelu */
 .tl-box { background: var(--panel); border: 1px solid var(--panel-line); border-radius: 10px; padding: 18px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
@@ -254,6 +260,7 @@ footer { border-top: 1px solid var(--line); padding-block: 24px 40px; color: var
 </head>
 <body>
 <div class="wrap">
+  <svg class="zs-logo" viewBox="0 0 408.86 408.86" role="img" aria-label="ZS logo"><title>ZS</title><rect width="408.86" height="408.86" rx="37.5" ry="37.5" fill="#231f20"/><path d="M105.42,86.95h198.02l-51.87,61.64-49.87.02c-13.67-.33-30.78,14.78-15,30.56l46.01,51.84.59.72c8.66,10.6,1.53,26.53-12.14,27.15l-3.79.17-58.88-.18-53.08,63.03h198.02" fill="none" stroke="#fff" stroke-linecap="square" stroke-linejoin="round" stroke-width="30"/></svg>
 
   <header class="hero">
     <div class="hero-text">
@@ -270,9 +277,9 @@ footer { border-top: 1px solid var(--line); padding-block: 24px 40px; color: var
   </header>
 
   <section class="video" id="video" aria-label="Video">
-    <div class="video-head"><h2>Clip Weaver v akci</h2><a href="https://youtu.be/oRWlmi5z_Bw">Otevřít na YouTube ↗</a></div>
+    <div class="video-head"><h2>Clip Weaver v akci</h2><a href="https://youtu.be/Ta-1F79XLBo">Otevřít na YouTube ↗</a></div>
     <div class="video-grid">
-      <div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/oRWlmi5z_Bw" title="Clip Weaver – video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      <div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/Ta-1F79XLBo" title="Clip Weaver – video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
     </div>
   </section>
 
